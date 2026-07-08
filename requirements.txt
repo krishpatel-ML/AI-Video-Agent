@@ -11,6 +11,8 @@ ffmpeg-python>=0.2.0              # FFmpeg bindings (FFmpeg binary must be insta
 openai-whisper @ git+https://github.com/openai/whisper.git        # pinned: last version without numba dependency                    # OpenAI Whisper (runs locally)
 torch>=2.2.0                      # PyTorch backend for Whisper
 torchaudio>=2.2.0                 # Audio utilities for PyTorch
+torchvision>=0.17.0               # Required by transformers' image processors (e.g. ZoeDepth)
+
 
 # ── Translation (Hindi → English) ─────────────────────────────────────────────
 deep-translator>=1.11.4           # Lightweight translation wrapper (Google backend)
