@@ -17,33 +17,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-# ─── Simple Password Gate ────────────────────────────────────────────────────  ← ADD HERE
-def check_password():
-    def password_entered():
-        if st.session_state["password_input"] == st.secrets["APP_PASSWORD"]:
-            st.session_state["authenticated"] = True
-            del st.session_state["password_input"]
-        else:
-            st.session_state["authenticated"] = False
-
-    if st.session_state.get("authenticated", False):
-        return True
-
-    st.markdown("### 🔒 This app is private")
-    st.text_input(
-        "Enter password",
-        type="password",
-        on_change=password_entered,
-        key="password_input",
-    )
-    if "authenticated" in st.session_state and not st.session_state["authenticated"]:
-        st.error("Incorrect password")
-    return False
-
-if not check_password():
-    st.stop()
-
-
 # ─── Custom CSS ─────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
