@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import os
 from dotenv import load_dotenv
 from utils.audio_processor import process_input
 from core.transcriber import transcribe_all
@@ -344,6 +345,15 @@ def render_step_bar(label: str, key: str, icon: str):
     )
 
 
+def save_uploaded_file(uploaded_file, save_dir="downloads") -> str:
+    """Save a Streamlit uploaded file to disk and return its path."""
+    os.makedirs(save_dir, exist_ok=True)
+    file_path = os.path.join(save_dir, uploaded_file.name)
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    return file_path
+
+
 # ─── Sidebar ────────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown(
@@ -359,6 +369,10 @@ with st.sidebar:
     source = st.text_input(
         "YouTube URL or File Path",
         placeholder="https://youtube.com/watch?v=... or /path/to/file.mp4",
+    )
+    uploaded_file = st.file_uploader(
+        "Or upload an audio / video file",
+        type=["mp3", "wav", "m4a", "mp4", "mov", "mkv", "webm"],
     )
 
     language = st.selectbox("Language", ["english", "hinglish"], index=0)
@@ -391,8 +405,8 @@ st.markdown("---")
 
 # ── Run Pipeline ────────────────────────────────────────────────────────────────
 if run_btn:
-    if not source.strip():
-        st.error("Please enter a YouTube URL or file path.")
+    if uploaded_file is None and not source.strip():
+        st.error("Please enter a YouTube URL / file path, or upload a file.")
     else:
         st.session_state.pipeline_done = False
         st.session_state.result = None
@@ -406,10 +420,15 @@ if run_btn:
 
         try:
             with progress_placeholder.container():
-                st.info("⚙️ Pipeline running — see sidebar for live status…")
+                st.info("⚙️ Pipeline running — see sidebar for live status...")
 
             update_step("audio", "active")
-            chunks = process_input(source)
+            # An uploaded file takes priority over the text box
+            if uploaded_file is not None:
+                input_source = save_uploaded_file(uploaded_file)
+            else:
+                input_source = source.strip()
+            chunks = process_input(input_source)
             update_step("audio", "done")
 
             update_step("transcript", "active")
@@ -595,7 +614,7 @@ else:
             Ready to Analyse
         </div>
         <div style="color:var(--text-muted);font-size:0.85rem;max-width:380px;line-height:1.7">
-            Paste a YouTube URL or local file path in the sidebar, choose your language, and hit <strong>Analyse</strong> to get started.
+            Paste a YouTube URL or file path, or upload an audio / video file in the sidebar, choose your language, and hit <strong>Analyse</strong> to get started.
         </div>
         <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
             <span class="badge badge-purple">Transcription</span>
