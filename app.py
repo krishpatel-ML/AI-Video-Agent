@@ -469,6 +469,9 @@ if run_btn:
             st.rerun()
 
         except Exception as e:
+            import traceback
+
+            traceback.print_exc()
             for k in ["audio", "transcript", "title", "summary", "extract", "rag"]:
                 if st.session_state.pipeline_steps.get(k) == "active":
                     st.session_state.pipeline_steps[k] = "pending"
