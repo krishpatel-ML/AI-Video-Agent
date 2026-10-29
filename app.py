@@ -366,12 +366,22 @@ with st.sidebar:
     st.markdown("---")
 
     st.markdown('<span class="badge badge-purple">Input</span>', unsafe_allow_html=True)
-    source = st.text_input(
-        "YouTube URL or File Path",
-        placeholder="https://youtube.com/watch?v=... or /path/to/file.mp4",
-    )
+
+    IS_CLOUD = os.path.exists("/mount/src")  # True on Streamlit Cloud
+
+    source = ""
+    if not IS_CLOUD:
+        source = st.text_input(
+            "YouTube URL or File Path",
+            placeholder="https://youtube.com/watch?v=... or /path/to/file.mp4",
+        )
+    else:
+        st.caption(
+            "YouTube links only work when running locally. Please upload a file."
+        )
+
     uploaded_file = st.file_uploader(
-        "Or upload an audio / video file",
+        "Upload an audio / video file",
         type=["mp3", "wav", "m4a", "mp4", "mov", "mkv", "webm"],
     )
 
