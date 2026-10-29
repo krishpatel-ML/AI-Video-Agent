@@ -1,12 +1,13 @@
 import os
 import shutil
+import tempfile
 import uuid
 from langchain_chroma import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 
-CHROMA_DIR = "vector_db"
+CHROMA_DIR = os.path.join(tempfile.gettempdir(), "vector_db")
 COLLECTION_NAME = "meeting_transcript"
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 
