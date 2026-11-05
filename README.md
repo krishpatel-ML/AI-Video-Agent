@@ -89,6 +89,4 @@ Open the local URL shown in your terminal, paste a YouTube URL or file path in t
 - Transcription runs on CPU by default. GPU (`cuda`) support is available but may require additional driver/CUDA configuration depending on your hardware.
 - Ensure `yt-dlp` is kept up to date (`uv pip install -U yt-dlp`) to avoid YouTube extraction errors.
 
-## License
 
-Add your preferred license here (e.g., MIT).
